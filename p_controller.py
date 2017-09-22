@@ -17,8 +17,8 @@ class P_Controller:
         # set_point_ and set it to 0.0, and start_time_
         # and set it to the start_time variable.
         ########################################
-
-
+        self.set_point_ = 0.0
+        self.start_time_ = start_time
         ########################################
 
         # Store last timestamp
@@ -35,14 +35,14 @@ class P_Controller:
         # Set the internal kp_ value with the provided variable
         # See setTarget if you are confused on how to do so
         ########################################
-
+        self.kp_ = kp
         ########################################
 
     def update(self, measured_value, timestamp):
         # Calculate delta_time using the last_timestamp_
         # and the provided timestamp argument
         ########################################
-
+        delta_time = timestamp - self.last_timestamp_
         ########################################
 
         if delta_time == 0:
@@ -52,25 +52,25 @@ class P_Controller:
         # Calculate the error as the differnce between
         # the set_point_ and the measured_value
         ########################################
-
+        error = self.set_point_ - measured_value
         ########################################
 
         # Set the last_timestamp_ to current timestamp
         ########################################
-
+        self.last_timestamp_ = timestamp
         ########################################
 
         # Calculate the proportional error here. Be sure to access the
         # the internal Kp class variable
         ########################################
-        p = None
+        p = self.kp_ * error
         ########################################
 
         # Set the control effort
         # u is the sum of all your errors. In this case it is just
         # the proportional error.
         ########################################
-        u = None
+        u = p
         ########################################
 
         # Here we are storing the control effort history for post control
