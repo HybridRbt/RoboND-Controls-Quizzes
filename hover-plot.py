@@ -12,9 +12,15 @@ kp = 0.76
 # Note that kp needs to be set to 0.76 in order to pass the project
 # You are encouraged to change Kp in order to observe the effects
 # What happens when Kp is really small?
+# 2. the overshoot is smaller, and the oscillation frequency is lower, and it will settle sooner. When it's small enough it even might not reach the setpoint.
 # What happens when Kp is really large?
+# 1. the overshoot is larger, and the oscillation frequency is higher, while taking longer to settle
+# Do we reach our desired goal?
+# 3. no, there will be a constant steady state error
 # Do we notice anything relating Kp and the control effort?
+# 4. positively related
 # Observe the steady state offset and the percent overshoot!
+# 5. overshoot with kp: positively related; ss offset: not directly related?
 ##################################################################################
 ##################################################################################
 
