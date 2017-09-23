@@ -124,12 +124,37 @@ def twiddle(tol=0.05):
     soln = hover(p)
     best_cost = cost_fun(soln)
 
-    # TODO: Complete the Twiddle ALgorithm
-    #
-    #
-    #######################################
-    return p
+    count = 0 # index for iteration
+    while sum(dp) > tol:
+        for i in range(len(p)):
+            p[i] += dp[i] # change p[i]
+            if p[i] < 0:
+                p[i] = 0  # prevent p[i] to become negative
+            # evaluate
+            soln = hover(p)
+            cost = cost_fun(soln)
 
+            if cost < best_cost: # direction is right, increase dp
+                best_cost = cost
+                dp[i] *= 1.1
+            else: # direction is wrong, change it
+                p[i] -= 2 * dp[i]
+                if p[i] < 0:
+                    p[i] = 0  # prevent p[i] to become negative
+                # evaluate
+                soln = hover(p)
+                cost = cost_fun(soln)
+
+                if cost < best_cost: # direction is right, increase dp
+                    best_cost = cost
+                    dp[i] *= 1.1
+                else:
+                    p[i] += dp[i]
+                    if p[i] < 0:
+                        p[i] = 0  # prevent p[i] to become negative
+                    dp[i] *= 0.9
+        count += 1
+    return p
 
 # Simulation parameters
 N = 500 # number of simultion points
