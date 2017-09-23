@@ -1,21 +1,17 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from pd_controller import PD_Controller
+from pid_controller import PIDController
 from quad1d_eom import ydot
 
 ##################################################################################
 ##################################################################################
 # This code is what will be executed and what will produce your results
-# For this quiz you need to set kd below to your desired value
-# Then modify pd_controller.py to build out your PD controller
-kp = 1.76
-kd = 0.45
-# Note that kd needs to be set to 0.45 in order to pass the project
-# You are encouraged to change Kd in order to observe the effects
-# What happens when Kd is really small?
-# What happens when Kd is really large?
-# Do we notice anything relating Kd and the control effort?
-# Observe the percent overshoot!
+# For this quiz you need to set kp, ki and kd so that you have a steady state
+# error offset less than 0.029 m and your percent overshoot is less than 4.0 %.
+# Its encouraged to try for less though!!
+kp = 0.7
+ki = 0.3
+kd = 0.5
 ##################################################################################
 ##################################################################################
 
@@ -36,24 +32,27 @@ y = [0, 0]
 # Initialize array to store values
 soln = np.zeros((len(time),len(y)))
 
-# Create instance of PI_Controller class
-pd = PD_Controller()
+# Create instance of PID_Controller class
+pid = PIDController()
 
 # Set the Kp value of the controller
-pd.setKP(kp)
+pid.setKP(kp)
+
+# Set the Ki value of the controller
+pid.setKI(ki)
 
 # Set the Kd value of the controller
-pd.setKD(kd)
+pid.setKD(kd)
 
 # Set altitude target
 r = 10 # meters
-pd.setTarget(r)
+pid.setTarget(r)
 
 # Simulate quadrotor motion
 j = 0 # dummy counter
 for t in time:
     # Evaluate state at next time point
-    y = ydot(y,t,pd)
+    y = ydot(y,t,pid)
     # Store results
     soln[j,:] = y
     j += 1
@@ -76,8 +75,9 @@ plt.show()
 
 fig2 = plt.figure()
 ax3 = fig2.add_subplot(111)
-ax3.plot(time, pd.u_p, label='u_p', linewidth=3, color = 'red')
-ax3.plot(time, pd.u_d, label='u_d', linewidth=3, color = 'blue')
+ax3.plot(time, pid.u_p, label='u_p', linewidth=3, color = 'red')
+ax3.plot(time, pid.u_i, label='u_i', linewidth=3, color = 'blue')
+ax3.plot(time, pid.u_d, label='u_d', linewidth=3, color = 'green')
 ax3.set_xlabel('Time, (sec)')
 ax3.set_ylabel('Control Effort')
 h, l = ax3.get_legend_handles_labels()
