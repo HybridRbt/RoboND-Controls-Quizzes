@@ -1,11 +1,13 @@
 ##################################################################################
+# Your goal is to follow the comments and complete the the tasks asked of you.
 #
-# No changes need to be made to the this code. Yay!
+# Good luck designing your proportional integral and derivative controller!
 #
 ##################################################################################
 
 class PIDController:
-    def __init__(self, kp = 0.0, ki = 0.0,  kd = 0.0, start_time = 0):
+    def __init__(self, kp = 0.0, ki = 0.0, kd = 0.0, max_windup = 20,
+            start_time = 0, alpha = 1., u_bounds = [float('-inf'), float('inf')]):
 
         # The PID controller can be initalized with a specific kp value
         # ki value, and kd value
@@ -22,6 +24,7 @@ class PIDController:
         # Setting control effort saturation limits
         self.umin = u_bounds[0]
         self.umax = u_bounds[1]
+
         # Store relevant data
         self.last_timestamp_ = 0.0
         self.set_point_ = 0.0
@@ -33,6 +36,18 @@ class PIDController:
         self.u_p = [0]
         self.u_i = [0]
         self.u_d = [0]
+
+    # Add a reset function to clear the class variables
+    def reset(self):
+        self.set_point_ = 0.0
+        self.kp_ = 0.0
+        self.ki_ = 0.0
+        self.kd_ = 0.0
+        self.error_sum_ = 0.0
+        self.last_timestamp_ = 0.0
+        self.last_error_ = 0
+        self.last_last_error_ = 0
+        self.last_windup_ = 0.0
 
     def setTarget(self, target):
         self.set_point_ = float(target)
@@ -65,10 +80,10 @@ class PIDController:
         # Sum the errors
         self.error_sum_ += error * delta_time
 
-        # Calculate the delta_error
+        # Find delta_error
         delta_error = error - self.last_error_
 
-        # Update the past error with the current error
+        # Update the past error
         self.last_error_ = error
 
         # Address max windup
