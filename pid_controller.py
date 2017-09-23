@@ -15,6 +15,10 @@ class PIDController:
 
         # Set max wind up
         self.max_windup_ = float(max_windup)
+
+        # Set alpha for derivative filter smoothing factor
+        self.alpha = float(alpha)
+
         # Setting control effort saturation limits
         self.umin = u_bounds[0]
         self.umax = u_bounds[1]
@@ -81,8 +85,11 @@ class PIDController:
         # Integral error
         i = self.ki_ * self.error_sum_
 
-        # Derivative error
-        d = self.kd_ * (delta_error / delta_time)
+        # Recalculate the derivative error here incorporating
+        # derivative smoothing!
+        ########################################
+        d = self.kd_ * (self.alpha * delta_error / delta_time + (1 - self.alpha)  * self.last_error_)
+        ########################################
 
         # Set the control effort
         u = p + i + d
