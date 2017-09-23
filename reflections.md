@@ -40,4 +40,17 @@ How does the overshoot vary with different Kd values?
 2. there were oscillations and if Kd is small enough, the setpoint may never be reached.
 3. no, there was some constant steady state error
 4. positively related
-5. positively related
+5. negatively related
+
+```
+Take some time after you have played with the code above to reflect on these questions:
+
+Is this better than PD control?
+How do the parameters work together?
+Do we reach our desired goal?
+How does control effort look?
+
+1. Yes
+2. Kp sets the overshoot; Ki adjusts the sse; Kd helps with reduction of the overshoot and oscillations
+3. Yes
+4. almost like a 90 degree angle
