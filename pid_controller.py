@@ -13,6 +13,8 @@ class PIDController:
         self.ki_ = float(ki)
         self.kd_ = float(kd)
 
+        # Set max wind up
+        self.max_windup_ = float(max_windup)
         # Store relevant data
         self.last_timestamp_ = 0.0
         self.set_point_ = 0.0
@@ -37,6 +39,10 @@ class PIDController:
     def setKD(self, kd):
         self.kd_ = float(kd)
 
+    # Create function to set max_windup_
+    def setMaxWindup(self, max_windup):
+        self.max_windup_ = int(max_windup)
+
     def update(self, measured_value, timestamp):
         delta_time = timestamp - self.last_timestamp_
         if delta_time == 0:
@@ -57,6 +63,14 @@ class PIDController:
 
         # Update the past error with the current error
         self.last_error_ = error
+
+        # Address max windup
+        ########################################
+        if self.error_sum_ > self.max_windup_:
+            self.error_sum_ = self.max_windup_
+        elif self.error_sum_ < -self.max_windup_:
+            self.error_sum_ = -self.max_windup_
+        ########################################
 
         # Proportional error
         p = self.kp_ * error
