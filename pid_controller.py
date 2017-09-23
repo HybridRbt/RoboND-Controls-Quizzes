@@ -15,6 +15,9 @@ class PIDController:
 
         # Set max wind up
         self.max_windup_ = float(max_windup)
+        # Setting control effort saturation limits
+        self.umin = u_bounds[0]
+        self.umax = u_bounds[1]
         # Store relevant data
         self.last_timestamp_ = 0.0
         self.set_point_ = 0.0
@@ -83,6 +86,14 @@ class PIDController:
 
         # Set the control effort
         u = p + i + d
+
+        # Enforce actuator saturation limits
+        ########################################
+        if u > self.umax:
+            u = self.umax
+        elif u < self.umin:
+            u = self.umin
+        ########################################
 
         # Here we are storing the control effort history for post control
         # observations.
